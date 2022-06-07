@@ -83,7 +83,7 @@ public class BoardTest {
         instance.setInput(new Scanner(input));
         int[] tuple = instance.move();
 
-        assertTrue(tuple[0] == 1 && tuple[1] == 2);
+        assertTrue(tuple[1] == 1 && tuple[0] == 2);
 
     }
 

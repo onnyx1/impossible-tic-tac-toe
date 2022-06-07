@@ -2,7 +2,6 @@ package game;
 
 import java.util.Scanner;
 
-
 public class Board {
 
     private final int ROWS;
@@ -29,6 +28,10 @@ public class Board {
 
     public String[][] getBoard() {
         return board;
+    }
+
+    public void setBoard(String[][] board) {
+        this.board = board;
     }
 
     public void setInput(Scanner input) {
@@ -67,13 +70,13 @@ public class Board {
 
     public int[] move() {
 
-        System.out.print("What is your move's X co-ordinate?: ");
+        System.out.print("What is your move's X coordinate?: ");
         int x = Integer.valueOf(input.next());
 
-        System.out.print("What is your move's Y co-ordinate?: ");
+        System.out.print("What is your move's Y coordinate?: ");
         int y = Integer.valueOf(input.next());
 
-        return new int[]{x, y};
+        return new int[]{y, x};
 
     }
 
@@ -86,10 +89,70 @@ public class Board {
                 newBoard[row][column] = gameBoard[row][column];
             }
         }
-        
+
+        if (!(newBoard[coords[0]][coords[1]].equals(" "))) {
+            throw new IllegalArgumentException("Can't make move " + "(" + coords[0] + ", " + coords[1] + "), " + "square already taken!");
+        }
+
         newBoard[coords[0]][coords[1]] = player;
 
         return newBoard;
     }
 
+    public static String getWinner(String[][] board) {
+
+        String[][] winCondition = {{board[0][0], board[0][1], board[0][2]}, {board[1][0], board[1][1], board[1][2]},
+        {board[2][0], board[2][1], board[2][2]}, {board[0][0], board[1][0], board[2][0]},
+        {board[0][1], board[1][1], board[2][1]}, {board[0][2], board[1][2], board[2][2]},
+        {board[0][0], board[1][1], board[2][2]}, {board[0][2], board[1][1], board[2][0]}};
+
+        int winX;
+        int winO;
+        for (int row = 0; row < winCondition.length; row++) {
+            winX = 0;
+            winO = 0;
+            for (int column = 0; column < winCondition[row].length; column++) {
+
+                if (winCondition[row][column].equals("X")) {
+                    winX++;
+                }
+
+                if (winCondition[row][column].equals("O")) {
+                    winO++;
+                }
+
+                if (winX == 3) {
+                    return "X";
+                }
+
+                if (winO == 3) {
+                    return "O";
+                }
+
+            }
+        }
+
+        return "None";
+
+    }
+
+    public static String testDraw(String[][] board) {
+
+        int draw = 0;
+
+        for (int row = 0; row < board.length; row++) {
+            for (int column = 0; column < board[row].length; column++) {
+                if (board[row][column].equals("X") || board[row][column].equals("O")) {
+                    draw++;
+                }
+            }
+        }
+
+        if (draw == 9) {
+            return "Draw";
+        } else {
+            return "Playing";
+        }
+
+    }
 }
